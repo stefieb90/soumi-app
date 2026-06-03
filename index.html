@@ -1,273 +1,734 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOUMI Applications</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
-<style>
-:root {
-  --green: #7ED321;
-  --green-dim: rgba(126,211,33,0.10);
-  --green-glow: rgba(126,211,33,0.22);
-  --bg: #080c10;
-  --bg-2: #0d1219;
-  --bg-3: #111820;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(126,211,33,0.4);
-  --text: #f0f4f8;
-  --text-mid: #8892a0;
-  --text-muted: #5a6475;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-}
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 48px 24px;
-  overflow-x: hidden;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOUMI.CA — Platform</title>
+  <meta name="description" content="SOUMI.CA — Estimateurs interactifs et expériences numériques pour entreprises de services." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
-/* grid bg */
-body::after {
-  content:'';
-  position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 20%, transparent 80%);
-}
+    :root {
+      --lime: #7ED321;
+      --lime-dim: rgba(126,211,33,0.12);
+      --lime-glow: rgba(126,211,33,0.25);
+      --orange: #F57C00;
+      --orange-dim: rgba(245,124,0,0.12);
+      --surface-0: #000000;
+      --surface-1: #0a0a0a;
+      --surface-2: #111111;
+      --surface-3: #1a1a1a;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text-primary: #f0f0f0;
+      --text-secondary: #888888;
+      --text-tertiary: #555555;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
 
-/* glow */
-.glow {
-  position:fixed; top:-120px; left:50%; transform:translateX(-50%);
-  width:700px; height:360px; border-radius:50%;
-  background: var(--green);
-  filter: blur(90px);
-  opacity: 0.10;
-  pointer-events:none; z-index:0;
-}
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--surface-0);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-.soumi-inner {
-  position: relative; z-index: 1;
-  max-width: 860px; width: 100%;
-  text-align: center;
-}
+    /* ── Language system ── */
+    body.lang-fr [data-lang="en"] { display: none !important; }
+    body.lang-en [data-lang="fr"] { display: none !important; }
 
-/* badge */
-.soumi-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--green-dim);
-  border: 1px solid rgba(126,211,33,0.25);
-  border-radius: 999px;
-  padding: 6px 18px;
-  font-family: var(--font-display);
-  font-size: 11px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--green);
-  margin-bottom: 32px;
-}
-.soumi-badge-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--green);
-  animation: pulse 2.2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.025;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
 
-/* heading */
-.soumi-h1 {
-  font-family: var(--font-display);
-  font-size: 52px; font-weight: 800;
-  line-height: 1.0; letter-spacing: -2px;
-  color: var(--text); margin-bottom: 8px;
-}
-.soumi-h1 span { color: var(--green); }
+    /* ── Grid background ── */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
 
-/* sub */
-.soumi-sub {
-  font-size: 16px; font-weight: 300;
-  color: var(--text-muted);
-  max-width: 520px; margin: 0 auto 52px;
-  line-height: 1.7;
-}
+    /* ── Utility ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .gradient-text { background: linear-gradient(135deg, var(--lime), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-border { border-image: linear-gradient(135deg, var(--lime), var(--orange)) 1; }
 
-/* features */
-.soumi-features {
-  display: flex; justify-content: center; gap: 28px;
-  margin-bottom: 52px; flex-wrap: wrap;
-}
-.soumi-feat {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 13px; font-weight: 400;
-  color: var(--text-muted);
-}
-.soumi-feat i { color: var(--green); font-size: 15px; }
+    /* ── Header ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid var(--border);
+    }
+    header .inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo { font-weight: 800; font-size: 18px; letter-spacing: -0.04em; color: #fff; text-decoration: none; }
+    .logo span { color: var(--lime); }
 
-/* grid */
-.soumi-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 20px; margin-bottom: 48px;
-}
+    /* ── Language toggle ── */
+    .lang-pill {
+      display: inline-flex; background: var(--surface-3); border-radius: 999px;
+      padding: 3px; position: relative; border: 1px solid var(--border);
+    }
+    .lang-pill button {
+      padding: 5px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+      border-radius: 999px; color: var(--text-tertiary); transition: color .2s;
+      position: relative; z-index: 1; background: none; border: none;
+      font-family: inherit; letter-spacing: 0.05em;
+    }
+    .lang-pill button.active { color: #000; }
+    .lang-indicator {
+      position: absolute; top: 3px; left: 3px;
+      height: calc(100% - 6px); width: calc(50% - 3px);
+      background: var(--lime); border-radius: 999px;
+      transition: transform .25s cubic-bezier(.4,0,.2,1);
+    }
+    .lang-indicator.en { transform: translateX(100%); }
 
-/* card */
-.soumi-card {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: 20px; padding: 40px 32px 36px;
-  text-align: left; cursor: pointer;
-  transition: border-color .2s, transform .2s, background .2s;
-  position: relative; overflow: hidden;
-  text-decoration: none; color: inherit; display: block;
-}
-.soumi-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-4px);
-  background: var(--bg-3);
-}
-.soumi-card-accent {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--green), transparent);
-  opacity: 0; transition: opacity .2s;
-}
-.soumi-card:hover .soumi-card-accent { opacity: 1; }
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      padding: 100px 0 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, var(--lime-glow) 0%, transparent 70%);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lime-dim); border: 1px solid rgba(126,211,33,0.15);
+      border-radius: 999px; padding: 6px 16px;
+      font-size: 12px; font-weight: 600; color: var(--lime);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--lime);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
 
-.soumi-card-top {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 24px;
-}
-.soumi-flag-wrap {
-  width: 56px; height: 40px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  font-size: 28px;
-}
-.soumi-tag {
-  font-family: var(--font-display);
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--green); background: var(--green-dim);
-  border-radius: 999px; padding: 4px 12px;
-}
+    /* ── Access Cards (Demos / Client Apps) ── */
+    .access-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    @media (max-width: 640px) { .access-grid { grid-template-columns: 1fr; } }
 
-.soumi-lang-name {
-  font-family: var(--font-display);
-  font-size: 26px; font-weight: 800;
-  color: var(--text); margin-bottom: 10px;
-  letter-spacing: -0.5px;
-}
-.soumi-lang-desc {
-  font-size: 14px; font-weight: 300;
-  color: var(--text-mid); line-height: 1.65;
-  margin-bottom: 28px;
-}
+    .access-card {
+      position: relative;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-decoration: none;
+      color: inherit;
+      transition: all .3s ease;
+      overflow: hidden;
+    }
+    .access-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--lime), var(--orange));
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .access-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 60px -20px rgba(0,0,0,0.5);
+    }
+    .access-card:hover::before { opacity: 1; }
 
-/* cta button */
-.soumi-cta {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--green); color: #07150a;
-  font-family: var(--font-display);
-  font-size: 13px; font-weight: 700;
-  border-radius: 10px; padding: 12px 20px;
-  transition: background .15s;
-}
-.soumi-card:hover .soumi-cta { background: #96e840; }
-.soumi-cta-arrow { transition: transform .2s; }
-.soumi-card:hover .soumi-cta-arrow { transform: translateX(3px); }
+    .access-card .icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .access-card .icon-wrap.lime { background: var(--lime-dim); color: var(--lime); }
+    .access-card .icon-wrap.orange { background: var(--orange-dim); color: var(--orange); }
 
-/* divider */
-.soumi-divider {
-  display: flex; align-items: center; gap: 16px;
-  margin-bottom: 28px;
-}
-.soumi-divider-line { flex: 1; height: 1px; background: var(--border); }
-.soumi-divider-text {
-  font-family: var(--font-display);
-  font-size: 10px; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--text-muted);
-}
+    .access-card h3 {
+      font-size: 18px; font-weight: 700; margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .access-card p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .access-card .action {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--lime);
+      transition: gap .2s;
+    }
+    .access-card:hover .action { gap: 10px; }
+    .access-card.client-card .action { color: var(--orange); }
 
-/* footer */
-.soumi-footer {
-  font-size: 12px; font-weight: 300;
-  color: #2d3540;
-}
+    /* ── Section titles ── */
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800; letter-spacing: -0.035em;
+      margin-bottom: 16px; color: #fff;
+    }
+    .section-desc {
+      font-size: 15px; color: var(--text-secondary);
+      max-width: 520px; line-height: 1.65;
+    }
 
-@media(max-width:600px){
-  .soumi-grid { grid-template-columns: 1fr; }
-  .soumi-h1 { font-size: 36px; letter-spacing: -1px; }
-}
-</style>
+    /* ── Apps showcase ── */
+    .apps-section { padding: 100px 0; }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    @media (max-width: 768px) { .apps-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .apps-grid { grid-template-columns: 1fr; } }
+
+    .app-tile {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      transition: all .25s ease;
+      cursor: default;
+    }
+    .app-tile:hover {
+      border-color: rgba(126,211,33,0.2);
+      background: var(--surface-3);
+    }
+    .app-tile .app-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--lime-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .app-tile h4 {
+      font-size: 15px; font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .app-tile .app-tag {
+      font-size: 11px; font-weight: 500;
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+    }
+    .app-tile .status {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 12px; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px;
+    }
+    .status.live { background: var(--lime-dim); color: var(--lime); }
+    .status.soon { background: var(--orange-dim); color: var(--orange); }
+
+    /* ── Client access explainer ── */
+    .client-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .client-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .client-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .client-visual {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .client-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--lime-glow), transparent 70%);
+      opacity: 0.1;
+    }
+    .url-bar {
+      background: var(--surface-0);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-secondary);
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .url-bar .protocol { color: var(--text-tertiary); }
+    .url-bar .domain { color: var(--lime); font-weight: 600; }
+    .url-bar .path { color: var(--orange); }
+    .url-bar .lock { color: var(--lime); font-size: 12px; }
+    .step-list { list-style: none; }
+    .step-list li {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 0;
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .step-list li .num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--surface-3); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--lime);
+      flex-shrink: 0;
+    }
+
+    /* ── About SOUMI ── */
+    .about-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .about-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .about-card { grid-template-columns: 1fr; padding: 32px; }
+    }
+    .about-card p {
+      font-size: 15px; color: var(--text-secondary);
+      line-height: 1.7; max-width: 540px;
+    }
+    .about-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--lime));
+      color: #000; font-weight: 700; font-size: 14px;
+      padding: 14px 28px; border-radius: 999px;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .about-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 30px -8px var(--lime-glow);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    footer p {
+      font-size: 12px; color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+    }
+    footer a { color: var(--lime); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Animations ── */
+    .fade-up {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .delay-1 { transition-delay: .1s; }
+    .delay-2 { transition-delay: .2s; }
+    .delay-3 { transition-delay: .3s; }
+    .delay-4 { transition-delay: .35s; }
+    .delay-5 { transition-delay: .4s; }
+    .delay-6 { transition-delay: .45s; }
+  </style>
 </head>
-<body>
+<body class="lang-fr">
 
-<div class="glow"></div>
-
-<div class="soumi-inner">
-
-  <div style="display:flex;justify-content:center;">
-    <div class="soumi-badge">
-      <div class="soumi-badge-dot"></div>
-      SOUMI
+  <!-- ════════ HEADER ════════ -->
+  <header>
+    <div class="container inner">
+      <a href="#" class="logo">SOUMI<span>.CA</span></a>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <nav style="display:flex;gap:24px;font-size:13px;font-weight:500;">
+          <a href="#apps" style="color:var(--text-secondary);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--lime)'" onmouseout="this.style.color='var(--text-secondary)'">Apps</a>
+          <a href="#access" style="color:var(--text-secondary);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--lime)'" onmouseout="this.style.color='var(--text-secondary)'">
+            <span data-lang="fr">Accès client</span><span data-lang="en">Client Access</span>
+          </a>
+          <a href="#about" style="color:var(--text-secondary);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--lime)'" onmouseout="this.style.color='var(--text-secondary)'">
+            <span data-lang="fr">À propos</span><span data-lang="en">About</span>
+          </a>
+        </nav>
+        <div class="lang-pill">
+          <div class="lang-indicator"></div>
+          <button onclick="setLang('fr')" class="active">FR</button>
+          <button onclick="setLang('en')">EN</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <h1 class="soumi-h1">Applications & <span>Estimateurs</span><br>Interactifs</h1>
-  <p class="soumi-sub">Sélectionnez votre langue pour accéder aux outils SOUMI — estimateurs, convertisseurs et expériences clients.</p>
+  <!-- ════════ HERO ════════ -->
+  <section class="hero grid-bg">
+    <div class="container" style="position:relative;z-index:1;">
 
-  <div class="soumi-features">
-    <div class="soumi-feat"><i class="ti ti-calculator" aria-hidden="true"></i> Estimateurs interactifs</div>
-    <div class="soumi-feat"><i class="ti ti-refresh" aria-hidden="true"></i> Outils de conversion</div>
-    <div class="soumi-feat"><i class="ti ti-users" aria-hidden="true"></i> Expériences clients</div>
-  </div>
-
-  <div class="soumi-grid">
-    <a href="/fr" class="soumi-card">
-      <div class="soumi-card-accent"></div>
-      <div class="soumi-card-top">
-        <div class="soumi-flag-wrap">🇨🇦</div>
-        <span class="soumi-tag">Recommandé</span>
+      <div class="hero-badge fade-up">
+        <span class="dot"></span>
+        <span data-lang="fr">Plateforme active</span>
+        <span data-lang="en">Platform online</span>
       </div>
-      <div class="soumi-lang-name">Français</div>
-      <div class="soumi-lang-desc">Accédez aux démonstrations, estimateurs interactifs et outils de conversion en français.</div>
-      <span class="soumi-cta">
-        Entrer
-        <i class="ti ti-arrow-right soumi-cta-arrow" aria-hidden="true"></i>
-      </span>
-    </a>
 
-    <a href="/en" class="soumi-card">
-      <div class="soumi-card-accent"></div>
-      <div class="soumi-card-top">
-        <div class="soumi-flag-wrap">🇺🇸</div>
-        <span class="soumi-tag">English</span>
+      <h1 class="fade-up delay-1">
+        <span data-lang="fr">Bienvenue sur la plateforme<br><span class="gradient-text">SOUMI.CA</span></span>
+        <span data-lang="en">Welcome to the<br><span class="gradient-text">SOUMI.CA</span> platform</span>
+      </h1>
+
+      <p class="fade-up delay-2">
+        <span data-lang="fr">Estimateurs interactifs, calculateurs et expériences numériques personnalisées pour les entreprises de services.</span>
+        <span data-lang="en">Interactive estimators, calculators and custom digital experiences for service businesses.</span>
+      </p>
+
+      <!-- Quick access cards -->
+      <div class="access-grid fade-up delay-3">
+
+        <a href="https://demo.soumi.ca" class="access-card">
+          <div class="icon-wrap lime"><i class="bi bi-play-circle-fill"></i></div>
+          <h3>
+            <span data-lang="fr">Démonstrations</span>
+            <span data-lang="en">Demos</span>
+          </h3>
+          <p>
+            <span data-lang="fr">Explorez nos estimateurs interactifs en action. Aucun compte requis.</span>
+            <span data-lang="en">Explore our interactive estimators in action. No account needed.</span>
+          </p>
+          <div class="action">
+            <span data-lang="fr">Accéder aux démos</span>
+            <span data-lang="en">Access demos</span>
+            <i class="bi bi-arrow-right"></i>
+          </div>
+        </a>
+
+        <a href="#access" class="access-card client-card">
+          <div class="icon-wrap orange"><i class="bi bi-shield-lock-fill"></i></div>
+          <h3>
+            <span data-lang="fr">Application client</span>
+            <span data-lang="en">Client Application</span>
+          </h3>
+          <p>
+            <span data-lang="fr">Accédez à votre estimateur personnalisé via le lien fourni par votre entreprise.</span>
+            <span data-lang="en">Access your custom estimator through the link provided by your company.</span>
+          </p>
+          <div class="action" style="color:var(--orange);">
+            <span data-lang="fr">En savoir plus</span>
+            <span data-lang="en">Learn more</span>
+            <i class="bi bi-arrow-right"></i>
+          </div>
+        </a>
+
       </div>
-      <div class="soumi-lang-name">English</div>
-      <div class="soumi-lang-desc">Access interactive estimators, conversion tools and English demonstrations.</div>
-      <span class="soumi-cta">
-        Enter
-        <i class="ti ti-arrow-right soumi-cta-arrow" aria-hidden="true"></i>
-      </span>
-    </a>
-  </div>
+    </div>
+  </section>
 
-  <div class="soumi-divider">
-    <div class="soumi-divider-line"></div>
-    <div class="soumi-divider-text">SOUMI.CA</div>
-    <div class="soumi-divider-line"></div>
-  </div>
+  <!-- ════════ APPS SHOWCASE ════════ -->
+  <section id="apps" class="apps-section">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-label">
+          <span data-lang="fr">Écosystème</span>
+          <span data-lang="en">Ecosystem</span>
+        </div>
+        <h2 class="section-title">
+          <span data-lang="fr">Applications disponibles</span>
+          <span data-lang="en">Available applications</span>
+        </h2>
+        <p class="section-desc">
+          <span data-lang="fr">Chaque application est conçue sur mesure pour un secteur d'activité spécifique. Déployée en marque blanche pour nos clients.</span>
+          <span data-lang="en">Each application is custom-built for a specific industry. Deployed as white-label for our clients.</span>
+        </p>
+      </div>
 
-  <div class="soumi-footer">© 2025 SOUMI Applications — Tous droits réservés</div>
+      <div class="apps-grid">
 
-</div>
+        <div class="app-tile fade-up delay-1">
+          <div class="app-icon">🏠</div>
+          <h4>Roof Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Toiture résidentielle et commerciale</span>
+            <span data-lang="en">Residential & commercial roofing</span>
+          </div>
+          <div class="status live">
+            <span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>
+            <span data-lang="fr">Disponible</span><span data-lang="en">Available</span>
+          </div>
+        </div>
+
+        <div class="app-tile fade-up delay-2">
+          <div class="app-icon">🏗️</div>
+          <h4>Renovation Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Rénovation intérieure et extérieure</span>
+            <span data-lang="en">Interior & exterior renovation</span>
+          </div>
+          <div class="status live">
+            <span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>
+            <span data-lang="fr">Disponible</span><span data-lang="en">Available</span>
+          </div>
+        </div>
+
+        <div class="app-tile fade-up delay-3">
+          <div class="app-icon">🏊</div>
+          <h4>Pool Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Piscines et aménagements aquatiques</span>
+            <span data-lang="en">Pools & aquatic installations</span>
+          </div>
+          <div class="status live">
+            <span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>
+            <span data-lang="fr">Disponible</span><span data-lang="en">Available</span>
+          </div>
+        </div>
+
+        <div class="app-tile fade-up delay-4">
+          <div class="app-icon">🪟</div>
+          <h4>Window Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Portes et fenêtres</span>
+            <span data-lang="en">Windows & doors</span>
+          </div>
+          <div class="status soon">
+            <span data-lang="fr">Bientôt</span><span data-lang="en">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="app-tile fade-up delay-5">
+          <div class="app-icon">❄️</div>
+          <h4>HVAC Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Chauffage, ventilation et climatisation</span>
+            <span data-lang="en">Heating, ventilation & air conditioning</span>
+          </div>
+          <div class="status soon">
+            <span data-lang="fr">Bientôt</span><span data-lang="en">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="app-tile fade-up delay-6">
+          <div class="app-icon">🧱</div>
+          <h4>Epoxy Match</h4>
+          <div class="app-tag">
+            <span data-lang="fr">Revêtements de plancher époxy</span>
+            <span data-lang="en">Epoxy floor coatings</span>
+          </div>
+          <div class="status soon">
+            <span data-lang="fr">Bientôt</span><span data-lang="en">Coming soon</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ CLIENT ACCESS ════════ -->
+  <section id="access" class="client-section">
+    <div class="container">
+      <div class="client-inner">
+
+        <div class="fade-up">
+          <div class="section-label">
+            <span data-lang="fr">Accès client</span>
+            <span data-lang="en">Client access</span>
+          </div>
+          <h2 class="section-title">
+            <span data-lang="fr">Votre application personnalisée</span>
+            <span data-lang="en">Your custom application</span>
+          </h2>
+          <p class="section-desc" style="margin-bottom:24px;">
+            <span data-lang="fr">Chaque entreprise cliente dispose de son propre sous-domaine sécurisé. L'accès se fait via le lien unique fourni lors de la mise en service.</span>
+            <span data-lang="en">Each client business has its own secure subdomain. Access is through the unique link provided during setup.</span>
+          </p>
+          <ul class="step-list">
+            <li>
+              <span class="num">1</span>
+              <span><span data-lang="fr">Votre entreprise vous fournit un lien personnalisé</span><span data-lang="en">Your company provides you with a custom link</span></span>
+            </li>
+            <li>
+              <span class="num">2</span>
+              <span><span data-lang="fr">Vous accédez directement à l'estimateur dédié</span><span data-lang="en">You access the dedicated estimator directly</span></span>
+            </li>
+            <li>
+              <span class="num">3</span>
+              <span><span data-lang="fr">Aucun compte requis — l'expérience est immédiate</span><span data-lang="en">No account needed — the experience is instant</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="client-visual fade-up delay-2">
+          <div class="url-bar">
+            <i class="bi bi-lock-fill lock"></i>
+            <span class="protocol">https://</span><span class="domain">votre-entreprise</span><span class="path">.soumi.ca</span>
+          </div>
+          <div style="background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;gap:10px;background:var(--lime-dim);border:1px solid rgba(126,211,33,0.15);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:600;color:var(--lime);margin-bottom:16px;">
+              <i class="bi bi-shield-check"></i>
+              <span data-lang="fr">Application sécurisée</span>
+              <span data-lang="en">Secure application</span>
+            </div>
+            <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;">
+              <span data-lang="fr">Votre estimateur</span>
+              <span data-lang="en">Your estimator</span>
+            </div>
+            <div style="font-size:13px;color:var(--text-tertiary);">
+              <span data-lang="fr">Expérience personnalisée à votre marque</span>
+              <span data-lang="en">Experience customized to your brand</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ ABOUT SOUMI ════════ -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-card fade-up">
+        <div>
+          <div class="section-label">
+            <span data-lang="fr">À propos</span>
+            <span data-lang="en">About</span>
+          </div>
+          <h2 class="section-title" style="margin-bottom:20px;">
+            <span data-lang="fr">Qu'est-ce que <span class="gradient-text">SOUMI.CA</span> ?</span>
+            <span data-lang="en">What is <span class="gradient-text">SOUMI.CA</span>?</span>
+          </h2>
+          <p>
+            <span data-lang="fr">SOUMI.CA développe des estimateurs interactifs, des calculateurs et des expériences numériques qui aident les entreprises de services à transformer leurs visiteurs en prospects qualifiés. Chaque application est conçue sur mesure, déployée en marque blanche et hébergée sur la plateforme SOUMI.</span>
+            <span data-lang="en">SOUMI.CA develops interactive estimators, calculators and digital experiences that help service businesses turn visitors into qualified leads. Each application is custom-built, deployed as white-label and hosted on the SOUMI platform.</span>
+          </p>
+        </div>
+        <a href="https://soumi.ca" class="about-link">
+          <span data-lang="fr">Visiter soumi.ca</span>
+          <span data-lang="en">Visit soumi.ca</span>
+          <i class="bi bi-arrow-up-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer>
+    <div class="container">
+      <p>
+        © 2026 SOUMI<span style="color:var(--lime);">.CA</span> ·
+        <a href="https://soumi.ca">soumi.ca</a> ·
+        <a href="https://demo.soumi.ca">
+          <span data-lang="fr">démos</span><span data-lang="en">demos</span>
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ════════ SCRIPTS ════════ -->
+  <script>
+    // ── Language ──
+    function setLang(lang) {
+      document.body.classList.remove('lang-fr', 'lang-en');
+      document.body.classList.add('lang-' + lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-indicator').forEach(i => i.classList.toggle('en', lang === 'en'));
+      document.querySelectorAll('.lang-pill button').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang);
+      });
+      try { localStorage.setItem('soumi-lang', lang); } catch(e) {}
+    }
+
+    // Restore saved language
+    (function() {
+      try {
+        const saved = localStorage.getItem('soumi-lang');
+        if (saved === 'en' || saved === 'fr') setLang(saved);
+      } catch(e) {}
+    })();
+
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Smooth scroll for anchor links ──
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
