@@ -4,119 +4,214 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOUMI Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'Inter',Arial,sans-serif;
-  background:#0b0f14;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  padding:48px 24px;
+:root {
+  --green: #7ED321;
+  --green-dim: rgba(126,211,33,0.10);
+  --green-glow: rgba(126,211,33,0.22);
+  --bg: #080c10;
+  --bg-2: #0d1219;
+  --bg-3: #111820;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(126,211,33,0.4);
+  --text: #f0f4f8;
+  --text-mid: #8892a0;
+  --text-muted: #5a6475;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
 }
-.soumi-inner{max-width:860px;width:100%;text-align:center;}
-.soumi-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(126,211,33,0.08);
-  border:1px solid rgba(126,211,33,0.25);
-  border-radius:999px;
-  padding:6px 18px;
-  font-size:11px;font-weight:700;letter-spacing:3px;
-  text-transform:uppercase;color:#7ED321;
-  margin-bottom:32px;
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 48px 24px;
+  overflow-x: hidden;
 }
-.soumi-badge-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#7ED321;
-  animation:pulse 2s infinite;
+
+/* grid bg */
+body::after {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 20%, transparent 80%);
 }
-@keyframes pulse{
-  0%,100%{opacity:1;}
-  50%{opacity:0.3;}
+
+/* glow */
+.glow {
+  position:fixed; top:-120px; left:50%; transform:translateX(-50%);
+  width:700px; height:360px; border-radius:50%;
+  background: var(--green);
+  filter: blur(90px);
+  opacity: 0.10;
+  pointer-events:none; z-index:0;
 }
-.soumi-h1{
-  font-size:52px;font-weight:800;line-height:1.08;
-  color:#fff;margin-bottom:6px;letter-spacing:-1.5px;
+
+.soumi-inner {
+  position: relative; z-index: 1;
+  max-width: 860px; width: 100%;
+  text-align: center;
 }
-.soumi-h1 span{color:#7ED321;}
-.soumi-sub{
-  font-size:17px;color:#6b7685;max-width:560px;
-  margin:0 auto 56px;line-height:1.65;
+
+/* badge */
+.soumi-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-dim);
+  border: 1px solid rgba(126,211,33,0.25);
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 32px;
 }
-.soumi-features{
-  display:flex;justify-content:center;gap:32px;margin-bottom:48px;flex-wrap:wrap;
+.soumi-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.2s ease-in-out infinite;
 }
-.soumi-feat{
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;color:#4a5568;
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+/* heading */
+.soumi-h1 {
+  font-family: var(--font-display);
+  font-size: 52px; font-weight: 800;
+  line-height: 1.0; letter-spacing: -2px;
+  color: var(--text); margin-bottom: 8px;
 }
-.soumi-feat i{color:#7ED321;font-size:15px;}
-.soumi-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:48px;
+.soumi-h1 span { color: var(--green); }
+
+/* sub */
+.soumi-sub {
+  font-size: 16px; font-weight: 300;
+  color: var(--text-muted);
+  max-width: 520px; margin: 0 auto 52px;
+  line-height: 1.7;
 }
-.soumi-card{
-  background:#111720;
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:20px;padding:40px 32px 36px;
-  text-align:left;cursor:pointer;
-  transition:border-color .2s,transform .2s;
-  position:relative;overflow:hidden;
-  text-decoration:none;color:inherit;display:block;
+
+/* features */
+.soumi-features {
+  display: flex; justify-content: center; gap: 28px;
+  margin-bottom: 52px; flex-wrap: wrap;
 }
-.soumi-card:hover{border-color:#7ED321;transform:translateY(-4px);}
-.soumi-card-accent{
-  position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,#7ED321,transparent);
-  opacity:0;transition:opacity .2s;
+.soumi-feat {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 400;
+  color: var(--text-muted);
 }
-.soumi-card:hover .soumi-card-accent{opacity:1;}
-.soumi-card-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:24px;
+.soumi-feat i { color: var(--green); font-size: 15px; }
+
+/* grid */
+.soumi-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; margin-bottom: 48px;
 }
-.soumi-flag-wrap{
-  width:56px;height:40px;border-radius:8px;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  font-size:28px;
+
+/* card */
+.soumi-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 40px 32px 36px;
+  text-align: left; cursor: pointer;
+  transition: border-color .2s, transform .2s, background .2s;
+  position: relative; overflow: hidden;
+  text-decoration: none; color: inherit; display: block;
 }
-.soumi-tag{
-  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:#7ED321;background:rgba(126,211,33,0.1);
-  border-radius:999px;padding:4px 12px;
+.soumi-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  background: var(--bg-3);
 }
-.soumi-lang-name{
-  font-size:26px;font-weight:800;color:#fff;
-  margin-bottom:10px;letter-spacing:-0.5px;
+.soumi-card-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: 0; transition: opacity .2s;
 }
-.soumi-lang-desc{font-size:14px;color:#6b7685;line-height:1.6;margin-bottom:28px;}
-.soumi-cta{
-  display:inline-flex;align-items:center;gap:8px;
-  background:#7ED321;color:#08180a;
-  font-size:13px;font-weight:700;border-radius:10px;
-  padding:12px 20px;
-  transition:background .15s;
+.soumi-card:hover .soumi-card-accent { opacity: 1; }
+
+.soumi-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
 }
-.soumi-card:hover .soumi-cta{background:#96e840;}
-.soumi-cta-arrow{transition:transform .2s;}
-.soumi-card:hover .soumi-cta-arrow{transform:translateX(3px);}
-.soumi-divider{
-  display:flex;align-items:center;gap:16px;margin-bottom:32px;
+.soumi-flag-wrap {
+  width: 56px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 28px;
 }
-.soumi-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.07);}
-.soumi-divider-text{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#3d4652;}
-.soumi-footer{font-size:12px;color:#2d3540;}
+.soumi-tag {
+  font-family: var(--font-display);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--green); background: var(--green-dim);
+  border-radius: 999px; padding: 4px 12px;
+}
+
+.soumi-lang-name {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 800;
+  color: var(--text); margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+.soumi-lang-desc {
+  font-size: 14px; font-weight: 300;
+  color: var(--text-mid); line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+/* cta button */
+.soumi-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: #07150a;
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700;
+  border-radius: 10px; padding: 12px 20px;
+  transition: background .15s;
+}
+.soumi-card:hover .soumi-cta { background: #96e840; }
+.soumi-cta-arrow { transition: transform .2s; }
+.soumi-card:hover .soumi-cta-arrow { transform: translateX(3px); }
+
+/* divider */
+.soumi-divider {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 28px;
+}
+.soumi-divider-line { flex: 1; height: 1px; background: var(--border); }
+.soumi-divider-text {
+  font-family: var(--font-display);
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text-muted);
+}
+
+/* footer */
+.soumi-footer {
+  font-size: 12px; font-weight: 300;
+  color: #2d3540;
+}
+
 @media(max-width:600px){
-  .soumi-grid{grid-template-columns:1fr;}
-  .soumi-h1{font-size:34px;}
+  .soumi-grid { grid-template-columns: 1fr; }
+  .soumi-h1 { font-size: 36px; letter-spacing: -1px; }
 }
 </style>
 </head>
 <body>
+
+<div class="glow"></div>
+
 <div class="soumi-inner">
 
   <div style="display:flex;justify-content:center;">
@@ -171,7 +266,7 @@ body{
     <div class="soumi-divider-line"></div>
   </div>
 
-  <div class="soumi-footer">© 2026 SOUMI Applications — Tous droits réservés</div>
+  <div class="soumi-footer">© 2025 SOUMI Applications — Tous droits réservés</div>
 
 </div>
 </body>
