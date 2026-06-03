@@ -1,157 +1,178 @@
-```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOUMI Applications</title>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;}
 body{
-font-family:Inter, Arial, sans-serif;
-background:#0b0f14;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:30px;
+  font-family:'Inter',Arial,sans-serif;
+  background:#0b0f14;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:48px 24px;
 }
-
-.container{
-max-width:900px;
-width:100%;
-text-align:center;
+.soumi-inner{max-width:860px;width:100%;text-align:center;}
+.soumi-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(126,211,33,0.08);
+  border:1px solid rgba(126,211,33,0.25);
+  border-radius:999px;
+  padding:6px 18px;
+  font-size:11px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:#7ED321;
+  margin-bottom:32px;
 }
-
-.logo{
-font-size:14px;
-letter-spacing:4px;
-text-transform:uppercase;
-color:#7ED321;
-margin-bottom:20px;
-font-weight:700;
+.soumi-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#7ED321;
+  animation:pulse 2s infinite;
 }
-
-h1{
-font-size:56px;
-font-weight:800;
-line-height:1.1;
-margin-bottom:15px;
+@keyframes pulse{
+  0%,100%{opacity:1;}
+  50%{opacity:0.3;}
 }
-
-.subtitle{
-font-size:20px;
-color:#9aa4b2;
-max-width:700px;
-margin:0 auto 60px;
-line-height:1.6;
+.soumi-h1{
+  font-size:52px;font-weight:800;line-height:1.08;
+  color:#fff;margin-bottom:6px;letter-spacing:-1.5px;
 }
-
-.lang-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:24px;
+.soumi-h1 span{color:#7ED321;}
+.soumi-sub{
+  font-size:17px;color:#6b7685;max-width:560px;
+  margin:0 auto 56px;line-height:1.65;
 }
-
-.lang-card{
-background:linear-gradient(180deg,#151b23,#10151c);
-border:1px solid rgba(255,255,255,0.08);
-border-radius:24px;
-padding:40px 30px;
-text-decoration:none;
-color:white;
-transition:all .25s ease;
+.soumi-features{
+  display:flex;justify-content:center;gap:32px;margin-bottom:48px;flex-wrap:wrap;
 }
-
-.lang-card:hover{
-transform:translateY(-6px);
-border-color:#7ED321;
-box-shadow:0 20px 50px rgba(126,211,33,.12);
+.soumi-feat{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:#4a5568;
 }
-
-.flag{
-font-size:52px;
-margin-bottom:20px;
+.soumi-feat i{color:#7ED321;font-size:15px;}
+.soumi-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:48px;
 }
-
-.lang-title{
-font-size:28px;
-font-weight:700;
-margin-bottom:10px;
+.soumi-card{
+  background:#111720;
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:20px;padding:40px 32px 36px;
+  text-align:left;cursor:pointer;
+  transition:border-color .2s,transform .2s;
+  position:relative;overflow:hidden;
+  text-decoration:none;color:inherit;display:block;
 }
-
-.lang-desc{
-color:#9aa4b2;
-line-height:1.6;
-margin-bottom:25px;
+.soumi-card:hover{border-color:#7ED321;transform:translateY(-4px);}
+.soumi-card-accent{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#7ED321,transparent);
+  opacity:0;transition:opacity .2s;
 }
-
-.btn{
-display:inline-block;
-padding:14px 24px;
-border-radius:12px;
-background:#7ED321;
-color:#08110a;
-font-weight:700;
-text-decoration:none;
+.soumi-card:hover .soumi-card-accent{opacity:1;}
+.soumi-card-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;
 }
-
-.footer{
-margin-top:50px;
-font-size:13px;
-color:#6f7782;
+.soumi-flag-wrap{
+  width:56px;height:40px;border-radius:8px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  font-size:28px;
+}
+.soumi-tag{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:#7ED321;background:rgba(126,211,33,0.1);
+  border-radius:999px;padding:4px 12px;
+}
+.soumi-lang-name{
+  font-size:26px;font-weight:800;color:#fff;
+  margin-bottom:10px;letter-spacing:-0.5px;
+}
+.soumi-lang-desc{font-size:14px;color:#6b7685;line-height:1.6;margin-bottom:28px;}
+.soumi-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#7ED321;color:#08180a;
+  font-size:13px;font-weight:700;border-radius:10px;
+  padding:12px 20px;
+  transition:background .15s;
+}
+.soumi-card:hover .soumi-cta{background:#96e840;}
+.soumi-cta-arrow{transition:transform .2s;}
+.soumi-card:hover .soumi-cta-arrow{transform:translateX(3px);}
+.soumi-divider{
+  display:flex;align-items:center;gap:16px;margin-bottom:32px;
+}
+.soumi-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.07);}
+.soumi-divider-text{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#3d4652;}
+.soumi-footer{font-size:12px;color:#2d3540;}
+@media(max-width:600px){
+  .soumi-grid{grid-template-columns:1fr;}
+  .soumi-h1{font-size:34px;}
 }
 </style>
 </head>
-
 <body>
+<div class="soumi-inner">
 
-<div class="container">
+  <div style="display:flex;justify-content:center;">
+    <div class="soumi-badge">
+      <div class="soumi-badge-dot"></div>
+      SOUMI
+    </div>
+  </div>
 
-<div class="logo">SOUMI</div>
+  <h1 class="soumi-h1">Applications & <span>Estimateurs</span><br>Interactifs</h1>
+  <p class="soumi-sub">Sélectionnez votre langue pour accéder aux outils SOUMI — estimateurs, convertisseurs et expériences clients.</p>
 
-<h1>Applications & Interactive Estimators</h1>
+  <div class="soumi-features">
+    <div class="soumi-feat"><i class="ti ti-calculator" aria-hidden="true"></i> Estimateurs interactifs</div>
+    <div class="soumi-feat"><i class="ti ti-refresh" aria-hidden="true"></i> Outils de conversion</div>
+    <div class="soumi-feat"><i class="ti ti-users" aria-hidden="true"></i> Expériences clients</div>
+  </div>
 
-<p class="subtitle">
-Choose your language to explore SOUMI's interactive estimators,
-conversion tools and client experiences.
-</p>
+  <div class="soumi-grid">
+    <a href="/fr" class="soumi-card">
+      <div class="soumi-card-accent"></div>
+      <div class="soumi-card-top">
+        <div class="soumi-flag-wrap">🇨🇦</div>
+        <span class="soumi-tag">Recommandé</span>
+      </div>
+      <div class="soumi-lang-name">Français</div>
+      <div class="soumi-lang-desc">Accédez aux démonstrations, estimateurs interactifs et outils de conversion en français.</div>
+      <span class="soumi-cta">
+        Entrer
+        <i class="ti ti-arrow-right soumi-cta-arrow" aria-hidden="true"></i>
+      </span>
+    </a>
 
-<div class="lang-grid">
+    <a href="/en" class="soumi-card">
+      <div class="soumi-card-accent"></div>
+      <div class="soumi-card-top">
+        <div class="soumi-flag-wrap">🇺🇸</div>
+        <span class="soumi-tag">English</span>
+      </div>
+      <div class="soumi-lang-name">English</div>
+      <div class="soumi-lang-desc">Access interactive estimators, conversion tools and English demonstrations.</div>
+      <span class="soumi-cta">
+        Enter
+        <i class="ti ti-arrow-right soumi-cta-arrow" aria-hidden="true"></i>
+      </span>
+    </a>
+  </div>
 
-<a href="/fr" class="lang-card">
-<div class="flag">🇨🇦</div>
-<div class="lang-title">Français</div>
-<div class="lang-desc">
-Accéder aux démonstrations, estimateurs interactifs et outils de conversion en français.
+  <div class="soumi-divider">
+    <div class="soumi-divider-line"></div>
+    <div class="soumi-divider-text">SOUMI.CA</div>
+    <div class="soumi-divider-line"></div>
+  </div>
+
+  <div class="soumi-footer">© 2025 SOUMI Applications — Tous droits réservés</div>
+
 </div>
-<span class="btn">Entrer</span>
-</a>
-
-<a href="/en" class="lang-card">
-<div class="flag">🇺🇸</div>
-<div class="lang-title">English</div>
-<div class="lang-desc">
-Access interactive estimators, conversion tools and English demonstrations.
-</div>
-<span class="btn">Enter</span>
-</a>
-
-</div>
-
-<div class="footer">
-© SOUMI Applications
-</div>
-
-</div>
-
 </body>
 </html>
-```
