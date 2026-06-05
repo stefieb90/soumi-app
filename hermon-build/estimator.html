@@ -654,55 +654,58 @@
     return ok;
   }
 
-  // ── Submit ────────────────────────────────────────────
-  submitBtn.addEventListener('click', function () {
-    if (!validate()) return;
+ // ── Submit ─────────────────────────────
+submitBtn.addEventListener('click', function () {
 
-    // Populate summary
-    const type = projectType.value;
-    const sqft = squareFootage.value;
-    document.getElementById('summaryType').textContent = pricing[type].label;
-    document.getElementById('summarySqft').textContent = sqft + ' sq ft';
-    document.getElementById('summaryComplexity').textContent = complexityLabels[currentComplexity];
-    document.getElementById('summaryEstimate').textContent = currentEstimate;
+  if (!validate()) return;
 
-    fetch('https://hook.us2.make.com/90hmycb9ip4zn340cywi2pmnbmqurdrb', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    client: 'Hermon Build',
+  const type = projectType.value;
+  const sqft = squareFootage.value;
 
-    projectType: pricing[type].label,
-    squareFootage: sqft,
-    complexity: complexityLabels[currentComplexity],
-    estimate: currentEstimate,
+  document.getElementById('summaryType').textContent = pricing[type].label;
+  document.getElementById('summarySqft').textContent = sqft + ' sq ft';
+  document.getElementById('summaryComplexity').textContent = complexityLabels[currentComplexity];
+  document.getElementById('summaryEstimate').textContent = currentEstimate;
 
-    name: document.getElementById('leadName').value,
-    phone: document.getElementById('leadPhone').value,
-    email: document.getElementById('leadEmail').value,
-    city: document.getElementById('leadCity').value
+  fetch('https://hook.us2.make.com/90hmycb9ip4zn340cywi2pmnbmqurdrb', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      client: 'Hermon Build',
+      projectType: pricing[type].label,
+      squareFootage: sqft,
+      complexity: complexityLabels[currentComplexity],
+      estimate: currentEstimate,
+      name: document.getElementById('leadName').value,
+      phone: document.getElementById('leadPhone').value,
+      email: document.getElementById('leadEmail').value,
+      city: document.getElementById('leadCity').value
+    })
   })
-})
-.then(() => {
-  showStep(3);
-})
-.catch((error) => {
-  console.error(error);
-  alert('Unable to submit your request. Please try again.');
-});
-
-  // ── Clear errors on input ─────────────────────────────
-  ['leadName','leadPhone','leadEmail','leadCity'].forEach(function (id) {
-    document.getElementById(id).addEventListener('input', function () {
-      this.closest('.field').classList.remove('has-error');
-    });
+  .then(() => {
+    showStep(3);
+  })
+  .catch((error) => {
+    console.error(error);
+    alert('Unable to submit your request. Please try again.');
   });
 
-  // ── Init ──────────────────────────────────────────────
-  calculate();
+});
+
+ // ── Clear errors on input ──
+['leadName','leadPhone','leadEmail','leadCity'].forEach(function (id) {
+  document.getElementById(id).addEventListener('input', function () {
+    this.closest('.field').classList.remove('has-error');
+  });
+});
+
+// ── Init ──
+calculate();
+
 })();
+
 </script>
 </body>
 </html>
