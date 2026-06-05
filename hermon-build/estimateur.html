@@ -1,1 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renovation Cost Estimator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --ink: #0e1117;
+    --ink-soft: #4a5263;
+    --ink-muted: #8b93a7;
+    --surface: #ffffff;
+    --surface-2: #f5f6f9;
+    --border: #e3e6ed;
+    --accent: #1a56db;
+    --accent-2: #0e3bab;
+    --accent-glow: rgba(26,86,219,0.12);
+    --gold: #c9922f;
+    --success: #059669;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(14,17,23,0.08);
+    --shadow-lg: 0 12px 48px rgba(14,17,23,0.14);
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface-2);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .app {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background:
+      radial-gradient(ellipse 70% 50% at 80% 10%, rgba(26,86,219,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 90%, rgba(201,146,47,0.06) 0%, transparent 55%),
+      #f5f6f9;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Header ── */
+  .card-header {
+    background: var(--ink);
+    padding: 32px 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(26,86,219,0.15);
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30%;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(201,146,47,0.1);
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: #fff;
+    line-height: 1.2;
+    position: relative; z-index: 1;
+  }
+  .header-title em { font-style: italic; color: #93b3f8; }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 8px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── Steps ── */
+  .step { display: none; padding: 32px 36px; }
+  .step.active { display: block; animation: fadeUp 0.35s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Form Elements ── */
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .field select,
+  .field input[type="number"],
+  .field input[type="text"],
+  .field input[type="tel"],
+  .field input[type="email"] {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234a5263' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+  }
+  .field select:focus,
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .field input::placeholder { color: var(--ink-muted); }
+
+  /* ── Complexity Buttons ── */
+  .complexity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .complexity-btn {
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+  }
+  .complexity-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .complexity-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .complexity-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    margin-top: 3px;
+  }
+  .complexity-btn.selected .complexity-label { color: var(--accent); opacity: 0.8; }
+
+  /* ── Estimate Result ── */
+  .estimate-box {
+    background: linear-gradient(135deg, var(--ink) 0%, #1c2a4a 100%);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .estimate-box::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(26,86,219,0.2);
+  }
+  .estimate-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .estimate-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: #fff;
+    line-height: 1.1;
+    position: relative; z-index: 1;
+  }
+  .estimate-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 8px;
+  }
+  .estimate-detail {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    justify-content: center;
+  }
+  .estimate-pill {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ── CTA Button ── */
+  .btn-primary {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 15px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary:hover {
+    background: var(--accent-2);
+    box-shadow: 0 6px 24px rgba(26,86,219,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: none;
+    border: none;
+    color: var(--ink-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px;
+    display: block;
+    margin: 12px auto 0;
+    transition: color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--accent); }
+
+  /* ── Step Title ── */
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .step-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Progress ── */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── Thank You ── */
+  .thankyou-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+  }
+  .thankyou-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .thankyou-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0 auto 28px;
+  }
+  .thankyou-summary {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .summary-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .summary-row .label { color: var(--ink-muted); }
+  .summary-row .value { font-weight: 600; color: var(--ink); }
+  .summary-row .value.accent { color: var(--accent); }
+
+  /* ── Error ── */
+  .error-msg {
+    font-size: 12px;
+    color: #dc2626;
+    margin-top: 6px;
+    display: none;
+  }
+  .field.has-error input, .field.has-error select {
+    border-color: #dc2626;
+  }
+  .field.has-error .error-msg { display: block; }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .card-header { padding: 24px 24px 20px; }
+    .step { padding: 24px; }
+    .header-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="card">
+
+    <div class="card-header">
+      <div class="header-eyebrow">Free Estimate Tool</div>
+      <div class="header-title">Get Your <em>Renovation</em><br>Cost Estimate</div>
+      <div class="header-sub">Takes under 60 seconds · No obligation</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 33%"></div>
+    </div>
+
+    <!-- Step 1: Calculator -->
+    <div class="step active" id="step1">
+      <div class="step-title">Your Project</div>
+      <div class="step-sub">Tell us about the renovation</div>
+
+      <div class="field">
+        <label for="projectType">Project Type</label>
+        <select id="projectType">
+          <option value="kitchen">Kitchen Renovation</option>
+          <option value="bathroom">Bathroom Renovation</option>
+          <option value="basement">Basement Development</option>
+          <option value="addition">Home Addition</option>
+          <option value="full">Full Home Renovation</option>
+        </select>
+      </div>
+
+      <div class="field" id="sqftField">
+        <label for="squareFootage">Square Footage (sq ft)</label>
+        <input type="number" id="squareFootage" placeholder="e.g. 250" min="1">
+        <div class="error-msg" id="sqftError">Please enter a valid square footage.</div>
+      </div>
+
+      <div class="field">
+        <label>Project Complexity</label>
+        <div class="complexity-grid">
+          <button class="complexity-btn" data-value="simple">
+            Simple
+            <span class="complexity-label">Basic finishes</span>
+          </button>
+          <button class="complexity-btn selected" data-value="medium">
+            Medium
+            <span class="complexity-label">Mid-range</span>
+          </button>
+          <button class="complexity-btn" data-value="complex">
+            Complex
+            <span class="complexity-label">Premium</span>
+          </button>
+        </div>
+        <input type="hidden" id="complexity" value="medium">
+      </div>
+
+      <div class="estimate-box" id="estimateBox">
+        <div class="estimate-label">Estimated Cost Range</div>
+        <div class="estimate-amount" id="estimatedAmount">Enter square footage</div>
+        <div class="estimate-note">*Final price varies based on materials &amp; site conditions</div>
+        <div class="estimate-detail" id="estimateDetail" style="display:none">
+          <span class="estimate-pill" id="pillType">—</span>
+          <span class="estimate-pill" id="pillComplexity">—</span>
+          <span class="estimate-pill" id="pillSqft">—</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="toStep2Btn" disabled>
+        Get My Free Quote →
+      </button>
+      <div style="font-size:11px;color:var(--ink-muted);text-align:center;margin-top:10px;">
+        No spam · No obligation · 100% free
+      </div>
+    </div>
+
+    <!-- Step 2: Lead Capture -->
+    <div class="step" id="step2">
+      <div class="step-title">Almost There</div>
+      <div class="step-sub">Where should we send your detailed quote?</div>
+
+      <div class="field" id="nameField">
+        <label for="leadName">Full Name</label>
+        <input type="text" id="leadName" placeholder="Jane Smith">
+        <div class="error-msg" id="nameError">Please enter your full name.</div>
+      </div>
+
+      <div class="field" id="phoneField">
+        <label for="leadPhone">Phone Number</label>
+        <input type="tel" id="leadPhone" placeholder="(514) 000-0000">
+        <div class="error-msg" id="phoneError">Please enter a valid phone number.</div>
+      </div>
+
+      <div class="field" id="emailField">
+        <label for="leadEmail">Email Address</label>
+        <input type="email" id="leadEmail" placeholder="jane@email.com">
+        <div class="error-msg" id="emailError">Please enter a valid email address.</div>
+      </div>
+
+      <div class="field" id="cityField">
+        <label for="leadCity">City</label>
+        <input type="text" id="leadCity" placeholder="Montreal">
+        <div class="error-msg" id="cityError">Please enter your city.</div>
+      </div>
+
+      <button class="btn-primary" id="submitBtn">
+        Send Me My Quote →
+      </button>
+      <button class="btn-secondary" id="backBtn">← Back to estimate</button>
+    </div>
+
+    <!-- Step 3: Thank You -->
+    <div class="step" id="step3">
+      <div class="thankyou-icon">✓</div>
+      <div class="thankyou-title">You're all set!</div>
+      <div class="thankyou-sub">
+        Thank you — a member of our team will reach out within <strong>1 business day</strong> to discuss your project in detail.
+      </div>
+
+      <div class="thankyou-summary" id="thankYouSummary">
+        <div class="summary-row">
+          <span class="label">Project</span>
+          <span class="value" id="summaryType">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Square Footage</span>
+          <span class="value" id="summarySqft">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Complexity</span>
+          <span class="value" id="summaryComplexity">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Estimate</span>
+          <span class="value accent" id="summaryEstimate">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  // ── Data ──────────────────────────────────────────────
+  const pricing = {
+    kitchen:  { base: 15000, rate: 120, label: 'Kitchen Renovation' },
+    bathroom: { base: 10000, rate: 100, label: 'Bathroom Renovation' },
+    basement: { base: 20000, rate:  80, label: 'Basement Development' },
+    addition: { base: 30000, rate: 200, label: 'Home Addition' },
+    full:     { base: 50000, rate: 150, label: 'Full Home Renovation' }
+  };
+  const multipliers = { simple: 0.85, medium: 1.0, complex: 1.35 };
+  const complexityLabels = { simple: 'Simple', medium: 'Medium', complex: 'Complex' };
+
+  // ── State ─────────────────────────────────────────────
+  let currentEstimate = '';
+  let currentComplexity = 'medium';
+
+  // ── Elements ──────────────────────────────────────────
+  const projectType   = document.getElementById('projectType');
+  const squareFootage = document.getElementById('squareFootage');
+  const complexityInput = document.getElementById('complexity');
+  const estimatedAmount = document.getElementById('estimatedAmount');
+  const toStep2Btn    = document.getElementById('toStep2Btn');
+  const submitBtn     = document.getElementById('submitBtn');
+  const backBtn       = document.getElementById('backBtn');
+  const progressFill  = document.getElementById('progressFill');
+  const estimateDetail = document.getElementById('estimateDetail');
+
+  // ── Currency ──────────────────────────────────────────
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-CA') + ' CAD';
+  }
+
+  // ── Calculate ─────────────────────────────────────────
+  function calculate() {
+    const type   = projectType.value;
+    const sqft   = parseFloat(squareFootage.value) || 0;
+    const comp   = complexityInput.value;
+    const config = pricing[type];
+    const mult   = multipliers[comp];
+
+    if (!config || sqft <= 0) {
+      estimatedAmount.textContent = 'Enter square footage';
+      estimateDetail.style.display = 'none';
+      toStep2Btn.disabled = true;
+      currentEstimate = '';
+      return;
+    }
+
+    const base = (config.base + sqft * config.rate) * mult;
+    const low  = Math.round(base * 0.85);
+    const high = Math.round(base * 1.2);
+    const rangeText = fmt(low) + ' – ' + fmt(high);
+
+    estimatedAmount.textContent = rangeText;
+    currentEstimate = rangeText;
+
+    document.getElementById('pillType').textContent = config.label;
+    document.getElementById('pillComplexity').textContent = complexityLabels[comp];
+    document.getElementById('pillSqft').textContent = sqft + ' sq ft';
+    estimateDetail.style.display = 'flex';
+
+    toStep2Btn.disabled = false;
+  }
+
+  // ── Complexity buttons ────────────────────────────────
+  document.querySelectorAll('.complexity-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.complexity-btn').forEach(function (b) {
+        b.classList.remove('selected');
+      });
+      btn.classList.add('selected');
+      complexityInput.value = btn.dataset.value;
+      currentComplexity = btn.dataset.value;
+      calculate();
+    });
+  });
+
+  projectType.addEventListener('change', calculate);
+  squareFootage.addEventListener('input', calculate);
+
+  // ── Step navigation ───────────────────────────────────
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(function (s) {
+      s.classList.remove('active');
+    });
+    document.getElementById('step' + n).classList.add('active');
+    const pct = n === 1 ? 33 : n === 2 ? 66 : 100;
+    progressFill.style.width = pct + '%';
+    window.scrollTo(0, 0);
+  }
+
+  toStep2Btn.addEventListener('click', function () {
+    showStep(2);
+  });
+
+  backBtn.addEventListener('click', function () {
+    showStep(1);
+  });
+
+  // ── Validation ────────────────────────────────────────
+  function clearError(fieldId) {
+    document.getElementById(fieldId).classList.remove('has-error');
+  }
+
+  function validate() {
+    let ok = true;
+
+    const name  = document.getElementById('leadName').value.trim();
+    const phone = document.getElementById('leadPhone').value.trim();
+    const email = document.getElementById('leadEmail').value.trim();
+    const city  = document.getElementById('leadCity').value.trim();
+
+    // Name
+    if (name.length < 2) {
+      document.getElementById('nameField').classList.add('has-error');
+      ok = false;
+    } else clearError('nameField');
+
+    // Phone (at least 7 digits)
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length < 7) {
+      document.getElementById('phoneField').classList.add('has-error');
+      ok = false;
+    } else clearError('phoneField');
+
+    // Email
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email)) {
+      document.getElementById('emailField').classList.add('has-error');
+      ok = false;
+    } else clearError('emailField');
+
+    // City
+    if (city.length < 2) {
+      document.getElementById('cityField').classList.add('has-error');
+      ok = false;
+    } else clearError('cityField');
+
+    return ok;
+  }
+
+  // ── Submit ────────────────────────────────────────────
+  submitBtn.addEventListener('click', function () {
+    if (!validate()) return;
+
+    // Populate summary
+    const type = projectType.value;
+    const sqft = squareFootage.value;
+    document.getElementById('summaryType').textContent = pricing[type].label;
+    document.getElementById('summarySqft').textContent = sqft + ' sq ft';
+    document.getElementById('summaryComplexity').textContent = complexityLabels[currentComplexity];
+    document.getElementById('summaryEstimate').textContent = currentEstimate;
+
+    // (Optional) fire off your lead webhook here:
+    // fetch('/api/leads', { method: 'POST', body: JSON.stringify({...}) });
+
+    showStep(3);
+  });
+
+  // ── Clear errors on input ─────────────────────────────
+  ['leadName','leadPhone','leadEmail','leadCity'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      this.closest('.field').classList.remove('has-error');
+    });
+  });
+
+  // ── Init ──────────────────────────────────────────────
+  calculate();
+})();
+</script>
+</body>
+</html>
