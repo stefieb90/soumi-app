@@ -863,11 +863,40 @@ document.getElementById('btnPrev').addEventListener('click', () => { if (EST.ste
 
 document.getElementById('leadForm').addEventListener('submit', e => {
   e.preventDefault();
-  const fb = document.getElementById('leadFeedback');
-  fb.classList.remove('hidden');
-  fb.querySelector('span').innerText = 'Demande reçue! Notre équipe vous contactera sous 24h pour confirmer votre soumission gratuite.';
-  setTimeout(() => fb.classList.add('hidden'), 9000);
-  e.target.reset();
+
+  fetch('https://hook.us2.make.com/90hmycb9ip4zn340cywi2pmnbmqurdrb', {
+    method: 'POST',
+    body: new URLSearchParams({
+      client: 'Concept-Toit MKS',
+      application: 'Roof Match',
+      leadType: 'Estimator',
+
+      nom: document.getElementById('leadNom').value,
+      telephone: document.getElementById('leadTel').value,
+      email: document.getElementById('leadEmail').value,
+      ville: document.getElementById('leadVille').value,
+
+      toiture: LABELS_TOITURE[EST.toiture] || '',
+      surface: EST.surface,
+      etages: EST.etages || '',
+      acces: LABELS_ACCES[EST.acces] || '',
+      urgence: LABELS_URGENCE[EST.urgence] || '',
+
+      estimationMin: document.getElementById('estPriceMin').innerText,
+      estimationMax: document.getElementById('estPriceMax').innerText
+    })
+  })
+  .then(() => {
+    const fb = document.getElementById('leadFeedback');
+    fb.classList.remove('hidden');
+    fb.querySelector('span').innerText =
+      'Demande reçue! Notre équipe vous contactera sous 24h pour confirmer votre soumission gratuite.';
+    e.target.reset();
+  })
+  .catch(error => {
+    console.error(error);
+    alert('Erreur lors de l’envoi.');
+  });
 });
 
 document.getElementById('contactForm').addEventListener('submit', e => {
