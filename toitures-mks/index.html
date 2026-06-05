@@ -901,11 +901,40 @@ document.getElementById('leadForm').addEventListener('submit', e => {
 
 document.getElementById('contactForm').addEventListener('submit', e => {
   e.preventDefault();
-  const fb = document.getElementById('ctFeedback');
-  fb.classList.remove('hidden');
-  fb.querySelector('span').innerText = 'Merci! Un expert vous rappellera sous 24h. Pour les urgences, appelez le 514-531-3232.';
-  setTimeout(() => fb.classList.add('hidden'), 9000);
-  e.target.reset();
+
+  fetch('https://hook.us2.make.com/90hmycb9ip4zn340cywi2pmnbmqurdrb', {
+    method: 'POST',
+    body: new URLSearchParams({
+      client: 'Concept-Toit MKS',
+      application: 'Contact Form',
+      leadType: 'Contact',
+
+      nom: document.getElementById('ctNom').value,
+      telephone: document.getElementById('ctTel').value,
+      email: document.getElementById('ctEmail').value,
+      ville: document.getElementById('ctVille').value,
+
+      toiture: document.getElementById('ctService').value,
+      urgence: document.getElementById('ctUrgence').value,
+
+      notes: document.getElementById('ctDetails').value,
+
+      source: 'Contact Form'
+    })
+  })
+  .then(() => {
+    const fb = document.getElementById('ctFeedback');
+    fb.classList.remove('hidden');
+    fb.querySelector('span').innerText =
+      'Merci! Un expert vous rappellera sous 24h. Pour les urgences, appelez le 514-531-3232.';
+
+    setTimeout(() => fb.classList.add('hidden'), 9000);
+    e.target.reset();
+  })
+  .catch(error => {
+    console.error(error);
+    alert("Erreur lors de l'envoi.");
+  });
 });
 
 document.getElementById('menuBtn').onclick = () => document.getElementById('mobileMenu').classList.toggle('hidden');
