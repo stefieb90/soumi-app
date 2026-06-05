@@ -666,11 +666,30 @@
     document.getElementById('summaryComplexity').textContent = complexityLabels[currentComplexity];
     document.getElementById('summaryEstimate').textContent = currentEstimate;
 
-    // (Optional) fire off your lead webhook here:
-    // fetch('/api/leads', { method: 'POST', body: JSON.stringify({...}) });
-
-    showStep(3);
-  });
+   fetch('TON_WEBHOOK_MAKE', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    client: 'Hermon Build',
+    projectType: pricing[type].label,
+    squareFootage: sqft,
+    complexity: complexityLabels[currentComplexity],
+    estimate: currentEstimate,
+    name: document.getElementById('leadName').value,
+    phone: document.getElementById('leadPhone').value,
+    email: document.getElementById('leadEmail').value,
+    city: document.getElementById('leadCity').value
+  })
+})
+.then(() => {
+  showStep(3);
+})
+.catch((error) => {
+  console.error(error);
+  alert('There was an error sending your request.');
+});
 
   // ── Clear errors on input ─────────────────────────────
   ['leadName','leadPhone','leadEmail','leadCity'].forEach(function (id) {
